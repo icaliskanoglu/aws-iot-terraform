@@ -4,6 +4,7 @@ variable "region" {
   default = "eu-central-1"
 }
 
+
 #since terraform is not supporting thing group yet, we will user this variable as prefix
 variable "thing_group" {
   type = string
@@ -24,8 +25,8 @@ provider "aws" {
 
 terraform {
   backend "s3" {
-    bucket = "jff-thing-deployment-frankfurt"
-    key    = "terraform-state/terraform.tfstate"
+    bucket = "jff-terraform-eu-central-1"
+    key    = "e-ticket/terraform.tfstate"
     region = "eu-central-1"
   }
 }

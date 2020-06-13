@@ -35,7 +35,24 @@ conf.json
 
 ## Usage
 
+uncomment terraform backend config in main.tf if you want to keep states in a s3 bucket
+
 ```
+terraform {
+  backend "s3" {
+    bucket = "my-terraform-bucket"
+    key    = "terraform/terraform.tfstate"
+    region = "eu-central-1"
+  }
+}
+```
+
+run terraform commands
+```
+terraform init
+
+terraform plan -var 'device_ids=["dev-id"]' -var 'organization_name=org' -var 'thing_group=dev-group'
+
 terraform apply -var 'device_ids=["dev-id"]' -var 'organization_name=org' -var 'thing_group=dev-group'
 ```
 
