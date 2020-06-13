@@ -37,3 +37,9 @@ resource "local_file" "thing-config" {
   })
   filename = "${var.outputs_path}/conf.json"
 }
+
+resource "null_resource" "config" {
+  provisioner "local-exec" {
+    command = "python ${path.module}/../upload-outputs.py --destinationBucket=${aws_s3_bucket.thing-deployment-bucket.bucket} --sourceDir=${var.outputs_path} --thingGroup=${var.thing_group} --version=${local.version}"
+  }
+}
