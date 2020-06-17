@@ -1,8 +1,6 @@
 import argparse
 # Python 3.7 using Cryptography
-from cryptography.hazmat.primitives import serialization
-from cryptography.hazmat.backends import default_backend
-from cryptography import x509
+
 import requests
 import boto3
 from botocore.exceptions import ClientError

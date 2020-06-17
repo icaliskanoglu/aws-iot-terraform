@@ -12,9 +12,9 @@ variable "device_ids" {
 
 resource "aws_iot_thing" "thing" {
   for_each = toset(var.device_ids)
-  name = "${var.thing_group}-${each.value}"
+  name     = "${var.thing_group}-${each.value}"
   attributes = {
-    Name  = "${var.thing_group}-${each.value}"
+    Name = "${var.thing_group}-${each.value}"
   }
 }
 
@@ -25,7 +25,7 @@ resource "aws_iot_certificate" "thing-certificate" {
 
 #attch thing to certificate
 resource "aws_iot_thing_principal_attachment" "thing-certificate-attachment" {
-  for_each = aws_iot_thing.thing
+  for_each  = aws_iot_thing.thing
   principal = "${aws_iot_certificate.thing-certificate.arn}"
   thing     = "${each.value.name}"
 }
@@ -76,4 +76,19 @@ resource "aws_iot_policy" "thing-assume-with-cert-policy" {
 resource "aws_iot_policy_attachment" "thing-assume-with-cert-policy-attachment" {
   policy = "${aws_iot_policy.thing-assume-with-cert-policy.name}"
   target = "${aws_iot_certificate.thing-certificate.arn}"
+}
+
+
+resource "aws_iot_topic_rule" "rule" {
+  name        = "ThingShadowRule"
+  description = "ThingShadowRule"
+  enabled     = true
+  sql         = "SELECT * , topic(3) as thingname FROM '$aws/things/+/shadow/update'"
+  sql_version = "2016-03-23"
+
+  s3 {
+    bucket_name = "${aws_s3_bucket.thing-shadow-bucket.bucket}"
+    role_arn    = "${aws_iam_role.thing-shadow-rule-role.arn}"
+    key         = "things/shadow/$${parse_time(\"yyyy/MM/dd/HH\", timestamp(), \"UTC\")}/$${topic(3)}-$${timestamp()}.json"
+  }
 }

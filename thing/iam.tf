@@ -123,3 +123,58 @@ resource "aws_iam_user_policy_attachment" "thing-deploy-user-policy-attachment" 
   policy_arn = "${aws_iam_policy.thing-deploy-policy.arn}"
   user = "${aws_iam_user.thing-deploy-user.name}"
 }
+
+
+data "aws_iam_policy_document" "thing-shadow-rule-policy-document" {
+  version = "2012-10-17"
+  statement {
+    sid    = "1"
+    effect = "Allow"
+    actions = [
+      "s3:ListBucket",
+    ]
+    resources = [
+      "arn:aws:s3:::${aws_s3_bucket.thing-shadow-bucket.bucket}",
+    ]
+  }
+  statement {
+    sid    = "2"
+    effect = "Allow"
+    actions = [
+      "s3:Put*",
+      "s3:Get*",
+    ]
+    resources = [
+      "arn:aws:s3:::${aws_s3_bucket.thing-shadow-bucket.bucket}/things/shadow/*",
+    ]
+  }
+}
+resource "aws_iam_policy" "thing-shadow-rule-policy" {
+  name = "thing-shadow-rule-policy"
+  policy = "${data.aws_iam_policy_document.thing-shadow-rule-policy-document.json}"
+}
+
+resource "aws_iam_role" "thing-shadow-rule-role" {
+  name = "thing-shadow-rule-role"
+
+  assume_role_policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": "sts:AssumeRole",
+      "Principal": {
+        "Service": "iot.amazonaws.com"
+      },
+      "Effect": "Allow",
+      "Sid": "1"
+    }
+  ]
+}
+EOF
+}
+
+resource "aws_iam_role_policy_attachment" "thing-shadow-rule-role-attachment" {
+  role       = "${aws_iam_role.thing-shadow-rule-role.name}"
+  policy_arn = "${aws_iam_policy.thing-shadow-rule-policy.arn}"
+}
