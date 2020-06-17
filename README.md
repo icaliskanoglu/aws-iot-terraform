@@ -10,12 +10,15 @@ Create AWS IOT required resources and export needed configurations.
 4. thing-assume-with-cert-policy
 5. thing-service-role to access aws services via thing-certificate
 6. thing-service-role-alias
-7. thing-aws-resources
+7. thing-shadow-rule to sending shadow data to s3 bucket
+8. thing-aws-resources
     1. thing-deployment-bucket: 
-8. thing-deploy-policy
-9. thing-deploy-role to access aws resources with role
-10. thing-deploy-user to access aws resources with user
-11. thing-configurations
+    2. thing-shadow-bucket
+    3. thing-shadow-table to querying shadow data from athena
+9. thing-deploy-policy
+10. thing-deploy-role to access aws resources with role
+11. thing-deploy-user to access aws resources with user
+12. thing-configurations
     1. thing-certificate as file
     2. thing-certificate-public-key as file
     3. thing-certificate-private-key as file

@@ -5,7 +5,7 @@
 *.tfstate
 *.tfstate.*
 **/outputs/*
-
+**/.history/*
 # Crash log files
 crash.log
 

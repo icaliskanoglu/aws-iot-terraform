@@ -54,6 +54,11 @@ resource "aws_glue_catalog_table" "thing-shadow-table" {
     }
 
     columns {
+      name = "logtimestamp"
+      type = "timestamp"
+    }
+
+    columns {
       name    = "state"
       type    = "struct<reported:struct<onstart:struct<resetreason:string,chipid:int,cpufreqmhz:int,sketchmd5:string,coreversion:string,sdkversion:string,flashchiprealsize:int,flashchipsize:int>,onloop:struct<analogpinoutputvalue:int,analogpina0:int,vcc:double>>>"
     }

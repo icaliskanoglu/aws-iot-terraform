@@ -79,11 +79,11 @@ resource "aws_iot_policy_attachment" "thing-assume-with-cert-policy-attachment" 
 }
 
 
-resource "aws_iot_topic_rule" "rule" {
+resource "aws_iot_topic_rule" "thing-shadow-rule" {
   name        = "ThingShadowRule"
   description = "ThingShadowRule"
   enabled     = true
-  sql         = "SELECT * , topic(3) as thingname FROM '$aws/things/+/shadow/update'"
+  sql         = "SELECT * , topic(3) as thingname , timestamp() as logtimestamp FROM '$aws/things/+/shadow/update'"
   sql_version = "2016-03-23"
 
   s3 {
